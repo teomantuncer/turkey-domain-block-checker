@@ -51,8 +51,40 @@ router.post('/', koaBody(), async (ctx, next) => {
 	ctx.request.socket.setTimeout(15 * 1000)
 	let dns = '195.175.39.49'
 	let blocker = '195.175.254.2'
+	if (ctx.query.dns) {
+		dns = ctx.query.dns
+	}
+	if (ctx.query.blocker) {
+		blocker = ctx.query.blocker
+	}
 	const result = {
 		results: []
+	}
+	for await (const o of ctx.request.body.domains) {
+		const subResult = {
+			domain: o
+		}
+		await checkDomain(o, {
+			dns,
+			blocker
+		}).then((res) => {
+			subResult.addressList = res.addressList
+			subResult.isBlocked = res.isBlocked
+			result.results.push(subResult)
+		}).catch(async (e) => {
+			console.error(e)
+			await checkDomain(o, {
+				dns,
+				blocker
+			}).then((res) => {
+				subResult.addressList = res.addressList
+				subResult.isBlocked = res.isBlocked
+				result.results.push(subResult)
+			}).catch((e) => {
+				console.error(e)
+			})
+		})
+		await sleep(50)
 	}
 	ctx.body = result
 })
