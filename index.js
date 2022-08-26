@@ -45,6 +45,23 @@ router.get('/:domain', async (ctx, next) => {
 	let dns = '195.175.39.49'
 	let blocker = '195.175.254.2'
 	const result = {}
+	if (ctx.query.dns) {
+		dns = ctx.query.dns
+	}
+	if (ctx.query.blocker) {
+		blocker = ctx.query.blocker
+	}
+	result.domain = ctx.params.domain
+	result.success = false
+	const res = await checkDomain(result.domain, {
+		dns,
+		blocker
+	})
+	if (res) {
+		result.addressList = res.addressList
+		result.isBlocked = res.isBlocked
+		result.success = true
+	}
 	ctx.body = result
 })
 router.post('/', koaBody(), async (ctx, next) => {
