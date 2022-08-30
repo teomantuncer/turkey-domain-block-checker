@@ -1,0 +1,19 @@
+{
+  "name": "nslookup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/router": "^10.1.1",
+    "koa": "^2.13.4",
+    "koa-body": "^4.2.0",
+    "native-dns": "^0.7.0",
+    "nodemon": "^2.0.15"
+  }
+}
